@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/quit"
+        android:icon="@drawable/ic_action_name"
+        android:title="@string/quit" />
+
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share" />
+
+    <item
+        android:id="@+id/new_note"
+        android:icon="@drawable/ic_new_note"
+        android:title="@string/new_note" />
+
+</menu>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AndroPad</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="new_note">New Note</string>
+    <string name="share">Share</string>
+    <string name="quit">Quit</string>
+    <string name="title_activity_new_note">NewNote</string>
+    <string name="andropad">Andropad</string>
+</resources>

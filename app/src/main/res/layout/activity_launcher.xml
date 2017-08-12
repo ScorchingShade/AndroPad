@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/violetDark"
+    android:id="@+id/r1"
+    tools:context="com.ankushinc.thereddragon.andropad.Launcher">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/andropad"
+        android:id="@+id/andropad_icon"
+        />
+    <TextView
+        android:layout_below="@+id/andropad_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/andropad"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:textAppearance="@color/Gold"
+        android:id="@+id/andropad_text"
+        />
+
+
+</RelativeLayout>

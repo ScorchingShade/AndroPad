@@ -1,6 +1,9 @@
 package com.ankushinc.thereddragon.andropad;
 
+import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +22,11 @@ public class NewNote extends AppCompatActivity {
     EditText title,note;
     boolean isOpen=false;
 
+    Context ctx;
+
     Databasehelper mydb;
+    SQLiteDatabase db;
+    BackgroundTask backgroundTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,8 @@ public class NewNote extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mydb=new Databasehelper(this);
+
+        backgroundTask=new BackgroundTask(this);
 
         title=(EditText)findViewById(R.id.title_text);
         note=(EditText)findViewById(R.id.note_area);
@@ -91,11 +100,10 @@ public class NewNote extends AppCompatActivity {
         fab_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isInserted = mydb.insertData(title.getText().toString(), note.getText().toString());
-                if (isInserted)
-                    Toast.makeText(NewNote.this, "Note Saved!", Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(NewNote.this, "Note Saved!", Toast.LENGTH_LONG).show();
+
+                backgroundTask.execute("add_info",title.getText().toString(),note.getText().toString());
+                NewNote.super.recreate();
+
             }
         });
 
@@ -107,7 +115,7 @@ public class NewNote extends AppCompatActivity {
         fab_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cursor res=mydb.getAllData();
+                Cursor res=mydb.getAllData(db);
                 if(res.getCount()==0){
 
                     alertbox("Error","Nothing here");
@@ -121,6 +129,7 @@ public class NewNote extends AppCompatActivity {
                 }
 
                 alertbox("Notes",buffer.toString());
+
             }
         });
     }

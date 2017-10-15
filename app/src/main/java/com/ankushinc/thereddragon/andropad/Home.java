@@ -46,6 +46,9 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        BackgroundTask backgroundTask=new BackgroundTask(this);
+
+        backgroundTask.execute("get_info");
 
         ListView listView=(ListView)findViewById(R.id.listView);
 
@@ -68,5 +71,5 @@ public class Home extends AppCompatActivity {
 
 }
 
-x
+
 

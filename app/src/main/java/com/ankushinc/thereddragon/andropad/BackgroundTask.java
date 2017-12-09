@@ -83,11 +83,13 @@ public class BackgroundTask extends AsyncTask<String,Note,String> {
 
     @Override
     protected void onPostExecute(String result) {
+        try{
         if (result.equals("get_info")) {
             listView.setAdapter(noteAdapter);
 
         } else {
             Toast.makeText(ctx, result, Toast.LENGTH_LONG).show();
-        }
+        }}
+        catch (Exception e){}
     }
 }

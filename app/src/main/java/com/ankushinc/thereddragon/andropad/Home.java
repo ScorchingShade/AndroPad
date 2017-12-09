@@ -1,24 +1,20 @@
 package com.ankushinc.thereddragon.andropad;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class Home extends AppCompatActivity {
 
     NewNote ob1=new NewNote();
-
+    NoteAdapter noteAdapter;
+    Context ctx;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -41,6 +37,9 @@ public class Home extends AppCompatActivity {
 
     };
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,11 @@ public class Home extends AppCompatActivity {
 
         backgroundTask.execute("get_info");
 
+
         ListView listView=(ListView)findViewById(R.id.listView);
+        listView.setAdapter(noteAdapter);
+
+
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

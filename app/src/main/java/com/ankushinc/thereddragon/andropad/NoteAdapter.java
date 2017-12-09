@@ -19,7 +19,7 @@ import java.util.*;
 public class NoteAdapter extends ArrayAdapter {
 
     List list=new ArrayList();
-
+    private Context context;
     public NoteAdapter(@NonNull Context context, @LayoutRes int resource) {
         super(context, resource);
     }

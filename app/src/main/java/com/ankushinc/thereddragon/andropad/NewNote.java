@@ -1,12 +1,9 @@
 package com.ankushinc.thereddragon.andropad;
 
-import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,12 +18,12 @@ public class NewNote extends AppCompatActivity {
     Animation FabOpen,FabClose,FabClockwise,FabAnticlockwise;
     EditText title,note;
     boolean isOpen=false;
+    DBhelper db;
+    Home home;
 
     Context ctx;
 
-    Databasehelper mydb;
-    SQLiteDatabase db;
-    BackgroundTask backgroundTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +31,10 @@ public class NewNote extends AppCompatActivity {
         setContentView(R.layout.activity_new_note);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mydb=new Databasehelper(this);
 
-        backgroundTask=new BackgroundTask(this);
+
+        db=new DBhelper(this);
+
 
         title=(EditText)findViewById(R.id.title_text);
         note=(EditText)findViewById(R.id.note_area);
@@ -93,15 +91,27 @@ public class NewNote extends AppCompatActivity {
         getSupportActionBar().setTitle("Untitled Note");
 
         addData();
-        viewAll();
+        newNote();
+        deleteNote();
     }
 
     public void addData() {
         fab_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                title=(EditText)findViewById(R.id.title_text);
+                note=(EditText)findViewById(R.id.note_area);
+                String Title=title.getText().toString();
+                String Note=note.getText().toString();
 
-                backgroundTask.execute("add_info",title.getText().toString(),note.getText().toString());
+                if(title.length()!=0){
+                    AddData(Title,Note);
+                }
+                else {
+                    Toast.makeText(NewNote.this, "Don't be lazy, atleast add a title!", Toast.LENGTH_SHORT).show();
+                }
+
+
                 NewNote.super.recreate();
 
             }
@@ -109,26 +119,44 @@ public class NewNote extends AppCompatActivity {
 
 
     }
+    public void AddData(String Title, String Note){
+        boolean insertData=db.insertNote(Title,Note);
+
+        if(insertData==true){
+            Toast.makeText(NewNote.this, "We caught that and saved it!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(NewNote.this, "Oops! something went wrong, try again!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
-    public void viewAll(){
+    public void newNote(){
         fab_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cursor res=mydb.getAllData(db);
-                if(res.getCount()==0){
+                startActivity(new Intent(NewNote.this,NewNote.class));
+                Toast.makeText(NewNote.this,"New Note!",Toast.LENGTH_SHORT).show();
 
-                    alertbox("Error","Nothing here");
-                    return;
-                }
-                StringBuffer buffer=new StringBuffer();
-                while(res.moveToNext()){
-                    buffer.append("Id: "+res.getString(0)+"\n");
-                    buffer.append("Title: "+res.getString(1)+"\n");
-                    buffer.append("Note: "+res.getString(2)+"\n");
-                }
+            }
+        });
+    }
 
-                alertbox("Notes",buffer.toString());
+    public void deleteNote(){
+        fab_trash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title=(EditText)findViewById(R.id.title_text);
+
+                String Title=title.getText().toString();
+
+
+                if(title.length()!=0){
+                    delNote(Title);
+                }
+                else {
+                    Toast.makeText(NewNote.this, "Seriously? How can we delete an empty note?", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -141,4 +169,25 @@ public class NewNote extends AppCompatActivity {
         builder.setMessage(Message);
         builder.show();
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        startActivity(new Intent(NewNote.this,Home.class));
+
+        finish();
+    }
+
+    public void delNote(String Title){
+        Integer insertData=db.deleteNote(Title);
+
+        if(insertData>0){
+            startActivity(new Intent(NewNote.this,NewNote.class));
+            Toast.makeText(NewNote.this, "Poof! that's deleted!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(NewNote.this, "Oops! something went wrong, try again!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

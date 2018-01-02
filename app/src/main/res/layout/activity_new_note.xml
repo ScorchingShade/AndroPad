@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/title_text"
-            android:text="Untitled Note"
+            android:hint="Untitled Note"
             android:background="@color/violetLight"/>
 
            </android.support.v7.widget.Toolbar>
@@ -41,7 +41,7 @@
         android:layout_marginRight="@dimen/fab_margin_right"
         android:elevation="6dp"
         android:src="@drawable/write_icon"
-        app:backgroundTint="@color/red"
+        app:backgroundTint="#d442f4"
         android:visibility="invisible"
         app:pressedTranslationZ="12dp" />
 
@@ -54,7 +54,7 @@
         android:layout_marginRight="@dimen/fab_margin_right"
         android:elevation="6dp"
         android:src="@drawable/save"
-        app:backgroundTint="@color/NewBlue"
+        app:backgroundTint="#d442f4"
         android:visibility="invisible"
         app:pressedTranslationZ="12dp" />
 
@@ -69,7 +69,7 @@
         android:elevation="6dp"
         android:visibility="invisible"
         android:src="@drawable/trash_icon_2"
-        app:backgroundTint="@color/green"
+        app:backgroundTint="#d442f4"
         app:pressedTranslationZ="12dp" />
 
 

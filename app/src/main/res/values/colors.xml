@@ -25,5 +25,6 @@
     <color name="violetLight">#9c27b0</color>
     <color name="violetDark">#7B1FA2</color>
     <color name="faintYellow">#f1f69c</color>
+    <color name="listviewViolet">#e799ff</color>
 </resources>
 

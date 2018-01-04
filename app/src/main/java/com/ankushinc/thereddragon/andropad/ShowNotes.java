@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class NewNote extends AppCompatActivity {
+public class ShowNotes extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_new,fab_save,fab_trash;
     Animation FabOpen,FabClose,FabClockwise,FabAnticlockwise;
     EditText title,note;
@@ -28,21 +27,27 @@ public class NewNote extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_note);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_show_notes);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_showNotes);
         setSupportActionBar(toolbar);
 
+
+        Intent intent=getIntent();
+        String old_title=intent.getStringExtra("title");
 
         db=new DBhelper(this);
 
 
-        title=(EditText)findViewById(R.id.title_text);
+        title=(EditText)findViewById(R.id.title_text_showNotes);
         note=(EditText)findViewById(R.id.note_area);
 
-         fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus);
-        fab_new = (FloatingActionButton) findViewById(R.id.fab_new);
-        fab_save = (FloatingActionButton) findViewById(R.id.fab_save);
-        fab_trash = (FloatingActionButton) findViewById(R.id.fab_trash);
+        title.setText(old_title);
+
+        fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus_showNotes);
+        fab_new = (FloatingActionButton) findViewById(R.id.fab_new_showNotes);
+        fab_save = (FloatingActionButton) findViewById(R.id.fab_save_showNotes);
+        fab_trash = (FloatingActionButton) findViewById(R.id.fab_trash_showNotes);
 
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
@@ -82,61 +87,22 @@ public class NewNote extends AppCompatActivity {
                     isOpen=true;
                 }
 
-
             }
         });
 
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Untitled Note");
-
-        addData();
+        updateData();
         newNote();
         deleteNote();
+        bringNoteArea(note,title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-    public void addData() {
-        fab_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                title=(EditText)findViewById(R.id.title_text);
-                note=(EditText)findViewById(R.id.note_area);
-                String Title=title.getText().toString();
-                String Note=note.getText().toString();
-
-                if(title.length()!=0){
-                    AddData(Title,Note);
-                }
-                else {
-                    Toast.makeText(NewNote.this, "Don't be lazy, atleast add a title!", Toast.LENGTH_SHORT).show();
-                }
-
-
-
-
-            }
-        });
-
-
-    }
-    public void AddData(String Title, String Note){
-        boolean insertData=db.insertNote(Title,Note);
-
-        if(insertData==true){
-            Toast.makeText(NewNote.this, "We caught that and saved it!", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(NewNote.this, "Oops! something went wrong, try again!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     public void newNote(){
         fab_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(NewNote.this,NewNote.class));
-                Toast.makeText(NewNote.this,"New Note!",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(ShowNotes.this,NewNote.class));
+                Toast.makeText(ShowNotes.this,"New Note!",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -146,7 +112,12 @@ public class NewNote extends AppCompatActivity {
         fab_trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title=(EditText)findViewById(R.id.title_text);
+                title=(EditText)findViewById(R.id.title_text_showNotes);
+
+                Intent intent=getIntent();
+                String old_title=intent.getStringExtra("title");
+
+                title.setText(old_title);
 
                 String Title=title.getText().toString();
 
@@ -155,25 +126,17 @@ public class NewNote extends AppCompatActivity {
                     delNote(Title);
                 }
                 else {
-                    Toast.makeText(NewNote.this, "Seriously? How can we delete an empty note?", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowNotes.this, "Seriously? How can we delete an empty note?", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
     }
 
-    public void alertbox(String title, String Message){
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(Message);
-        builder.show();
-    }
-
     @Override
     public void onBackPressed()
     {
-        startActivity(new Intent(NewNote.this,Home.class));
+        startActivity(new Intent(ShowNotes.this,Home.class));
 
         finish();
     }
@@ -182,11 +145,56 @@ public class NewNote extends AppCompatActivity {
         Integer insertData=db.deleteNote(Title);
 
         if(insertData>0){
-            startActivity(new Intent(NewNote.this,NewNote.class));
-            Toast.makeText(NewNote.this, "Poof! that's deleted!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(ShowNotes.this,NewNote.class));
+            Toast.makeText(ShowNotes.this, "Poof! that's deleted!", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(NewNote.this, "Oops! something went wrong, try again!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ShowNotes.this, "Oops! something went wrong, try again!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void bringNoteArea(EditText note,EditText title){
+        db = new DBhelper(this);
+        String Title=title.getText().toString();
+        String Note = db.getNoteData(Title);
+        note.setText(Note);
+
+
+    }
+
+    public void updateData() {
+        fab_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title=(EditText)findViewById(R.id.title_text_showNotes);
+                note=(EditText)findViewById(R.id.note_area);
+                String Title=title.getText().toString();
+                String Note=note.getText().toString();
+
+                if(title.length()!=0){
+                    UpdateData(Title,Note);
+                }
+                else {
+                    Toast.makeText(ShowNotes.this, "Seriously update note without a title -_- ?", Toast.LENGTH_SHORT).show();
+                }
+
+
+
+
+            }
+        });
+
+
+    }
+
+    public void UpdateData(String Title, String Note){
+        boolean updateData=db.updateNote(Title,Note);
+
+        if(updateData==true){
+            Toast.makeText(ShowNotes.this, "Note Updated!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(ShowNotes.this, "Oops! something went wrong, try again!", Toast.LENGTH_SHORT).show();
         }
     }
 

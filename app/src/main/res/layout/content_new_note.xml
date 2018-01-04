@@ -18,18 +18,16 @@
             android:layout_height="match_parent">
 
             <EditText
+                android:id="@+id/note_area"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:hint="Your note here!"
                 android:textSize="20dp"
-                android:id="@+id/note_area"
 
                 />
 
 
         </RelativeLayout>
-
-
-
 
 
     </ScrollView>
